@@ -162,6 +162,11 @@
         .contact-method-value:hover{color:var(--sky);}
         .form-card{background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:2.6rem;}
         .form-card-title{color:white;font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:1.5rem;}
+        /* Widget contact Klientys : embed.js lui impose 480px, sans barre de défilement,
+           alors que le formulaire en occupe déjà ~540. On réserve de la place pour
+           l'agrandissement du champ Message et un éventuel message d'erreur.
+           !important : la hauteur d'origine est posée en style inline par embed.js. */
+        .form-card [data-saas-widget="contact"] iframe{height:680px !important;}
 
         /* RÉSERVATION (widget Klientys, pleine largeur sous la grille contact) */
         .booking-wrap{position:relative;z-index:1;margin-top:5rem;}
@@ -201,6 +206,8 @@
             .footer-grid{grid-template-columns:1fr;}
             .footer-bottom{flex-direction:column;text-align:center;}
             .form-card{padding:1.5rem;}
+            /* Colonnes plus étroites : les libellés passent sur deux lignes */
+            .form-card [data-saas-widget="contact"] iframe{height:740px !important;}
             /* Laisse la place à la bulle du chatbot (60px + 24px de marge) en bas à droite */
             #cookie{right:96px;}
         }
@@ -811,7 +818,8 @@ window.onload = () => {
 };
 </script>
 
-<!-- Widgets Klientys : un seul chatbot, et le loader une seule fois, en HTTPS -->
+<!-- Widgets Klientys : un seul chatbot, et le loader une seule fois, en HTTPS.
+     data-saas-lang="auto" : les widgets suivent <html lang>, que setLang() met à jour. -->
 <div data-saas-widget="chatbot" data-saas-slug="muntu-cura" data-saas-lang="auto"></div>
 <script src="https://klientys.co/embed.js" async></script>
 </body>
