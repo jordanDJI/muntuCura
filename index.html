@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
         :root {
@@ -162,16 +161,11 @@
         .contact-method-value{color:white;font-weight:600;font-size:.98rem;text-decoration:none;}
         .contact-method-value:hover{color:var(--sky);}
         .form-card{background:rgba(255,255,255,.04);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:2.6rem;}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
-        .form-group{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem;}
-        .form-label{font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;}
-        .form-input,.form-select,.form-textarea{width:100%;padding:.85rem 1.1rem;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:white;font-size:.93rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,background .2s;}
-        .form-input::placeholder,.form-textarea::placeholder{color:rgba(255,255,255,.28);}
-        .form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--sky);background:rgba(0,168,224,.06);}
-        .form-select option{background:var(--ink);}
-        .form-textarea{resize:vertical;min-height:100px;}
-        .form-submit{width:100%;padding:1.05rem;background:var(--sky);color:white;border:none;border-radius:10px;font-size:.98rem;font-weight:600;cursor:pointer;transition:background .2s,transform .2s;font-family:'DM Sans',sans-serif;}
-        .form-submit:hover{background:var(--sky-deep);transform:translateY(-1px);}
+        .form-card-title{color:white;font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:1.5rem;}
+
+        /* RÉSERVATION (widget Klientys, pleine largeur sous la grille contact) */
+        .booking-wrap{position:relative;z-index:1;margin-top:5rem;}
+        .booking-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:700;color:white;text-align:center;margin-bottom:2rem;}
 
         /* FOOTER */
         footer{background:#060f1a;color:white;padding:4rem 0 2rem;}
@@ -204,9 +198,11 @@
             .nav-links,.nav-cta-wrap{display:none;}
             .hamburger{display:block;}
             .numbers-grid{grid-template-columns:repeat(2,1fr);}
-            .form-row{grid-template-columns:1fr;}
             .footer-grid{grid-template-columns:1fr;}
             .footer-bottom{flex-direction:column;text-align:center;}
+            .form-card{padding:1.5rem;}
+            /* Laisse la place à la bulle du chatbot (60px + 24px de marge) en bas à droite */
+            #cookie{right:96px;}
         }
     </style>
 </head>
@@ -574,47 +570,17 @@
             </div>
             <div class="reveal-right">
                 <div class="form-card">
-                    <h3 style="color:white;font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:1.5rem;" id="f-title">Demande de partenariat</h3>
-                    <form id="contactForm">
-                        <div class="form-row" style="margin-bottom:1.2rem;">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label class="form-label" id="fl1">Structure</label>
-                                <input type="text" name="structure" class="form-input" placeholder="Clinique St-Jean..." required>
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label class="form-label" id="fl2">Responsable</label>
-                                <input type="text" name="user_name" id="fi-name" class="form-input" placeholder="Votre nom" required>
-                            </div>
-                        </div>
-                        <div class="form-row" style="margin-bottom:1.2rem;">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label class="form-label" id="fl3">Téléphone</label>
-                                <input type="tel" name="user_phone" id="fi-phone" class="form-input" placeholder="+32..." required>
-                            </div>
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label class="form-label" id="fl4">Email</label>
-                                <input type="email" name="user_email" class="form-input" placeholder="contact@..." required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" id="fl5">Type de besoin</label>
-                            <select name="type_besoin" class="form-select form-input">
-                                <option id="fo1" value="renfort">Renfort ponctuel</option>
-                                <option id="fo2" value="remplacement">Remplacement</option>
-                                <option id="fo3" value="regulier">Collaboration régulière</option>
-                                <option id="fo4" value="autre">Autre</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" id="fl6">Message</label>
-                            <textarea name="message" id="fi-msg" class="form-textarea" placeholder="Décrivez vos besoins spécifiques..." rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="form-submit" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i> <span id="f-send">Envoyer la demande</span>
-                        </button>
-                    </form>
+                    <h3 class="form-card-title" id="f-title">Demande de partenariat</h3>
+                    <!-- Formulaire de contact Klientys : chaque demande arrive dans le CRM -->
+                    <div data-saas-widget="contact" data-saas-slug="muntu-cura"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Réservation Klientys : pleine largeur, sous la grille -->
+        <div class="booking-wrap" id="reservation">
+            <h3 class="booking-title" id="b-title">Réserver un créneau</h3>
+            <div data-saas-widget="book" data-saas-slug="muntu-cura"></div>
         </div>
     </div>
 </section>
@@ -671,7 +637,7 @@
 
 <!-- COOKIE -->
 <div id="cookie">
-    <p id="ck-txt">Nous utilisons des cookies pour améliorer votre expérience. <a href="#" style="color:var(--sky)">Politique RGPD.</a></p>
+    <p><span id="ck-txt">Nous utilisons des cookies pour améliorer votre expérience.</span> <a href="#" style="color:var(--sky)" id="ck-link">Politique RGPD.</a></p>
     <div class="cookie-btns">
         <button class="cookie-accept" onclick="ckAccept()" id="ck-acc">Accepter</button>
         <button class="cookie-reject" onclick="ckReject()" id="ck-rej">Refuser</button>
@@ -679,11 +645,6 @@
 </div>
 
 <script>
-// EmailJS — à configurer
-// emailjs.init("VOTRE_PUBLIC_KEY");
-const SERVICE_ID = "VOTRE_SERVICE_ID";
-const TEMPLATE_ID = "VOTRE_TEMPLATE_ID";
-
 const T = {
     fr: {
         'logo-sub':'Partenaire de soins B2B',
@@ -722,15 +683,14 @@ const T = {
         'ctag':'Contact','c-title':'Parlons de votre besoin en personnel infirmier',
         'c-sub':'Que vous ayez besoin d\'un renfort ponctuel ou d\'une collaboration régulière, je suis disponible pour en discuter.',
         'cm1-l':'Téléphone & WhatsApp','cm2-l':'Email professionnel','cm3-l':'Zone d\'intervention','cm3-v':'Halle · Lembeek · Beersel & environs',
-        'f-title':'Demande de partenariat','fl1':'Structure','fl2':'Responsable','fl3':'Téléphone','fl4':'Email','fl5':'Type de besoin','fl6':'Message',
-        'fo1':'Renfort ponctuel','fo2':'Remplacement','fo3':'Collaboration régulière','fo4':'Autre',
-        'f-send':'Envoyer la demande',
+        'f-title':'Demande de partenariat',
+        'b-title':'Réserver un créneau',
         'f-desc':'Infirmière indépendante · Partenaire B2B de soins · Belgique',
         'fc1-h':'Navigation','fc1-1':'Services','fc1-2':'À propos','fc1-3':'Fonctionnement','fc1-4':'Contact',
         'fc2-h':'Légal','fc3-h':'Contact direct',
         'f-rights':'© 2025 MUNTU CURA · Tous droits réservés',
         'ck-acc':'Accepter','ck-rej':'Refuser',
-        'ck-txt':'Nous utilisons des cookies pour améliorer votre expérience.'
+        'ck-txt':'Nous utilisons des cookies pour améliorer votre expérience.','ck-link':'Politique RGPD.'
     },
     nl: {
         'logo-sub':'B2B-zorgpartner',
@@ -769,15 +729,14 @@ const T = {
         'ctag':'Contact','c-title':'Laten we spreken over uw verpleegkundige behoeften',
         'c-sub':'Of u nu tijdelijke versterking of regelmatige samenwerking nodig heeft, ik ben beschikbaar om te bespreken.',
         'cm1-l':'Telefoon & WhatsApp','cm2-l':'Professioneel e-mailadres','cm3-l':'Werkgebied','cm3-v':'Halle · Lembeek · Beersel & omgeving',
-        'f-title':'Partnerschapsaanvraag','fl1':'Instelling','fl2':'Verantwoordelijke','fl3':'Telefoon','fl4':'E-mail','fl5':'Type behoefte','fl6':'Bericht',
-        'fo1':'Incidentele versterking','fo2':'Vervanging','fo3':'Regelmatige samenwerking','fo4':'Ander',
-        'f-send':'Aanvraag versturen',
+        'f-title':'Partnerschapsaanvraag',
+        'b-title':'Een tijdslot reserveren',
         'f-desc':'Onafhankelijke verpleegkundige · B2B-zorgpartner · België',
         'fc1-h':'Navigatie','fc1-1':'Diensten','fc1-2':'Over ons','fc1-3':'Werkwijze','fc1-4':'Contact',
         'fc2-h':'Juridisch','fc3-h':'Direct contact',
         'f-rights':'© 2025 MUNTU CURA · Alle rechten voorbehouden',
         'ck-acc':'Accepteren','ck-rej':'Weigeren',
-        'ck-txt':'Wij gebruiken cookies om uw ervaring te verbeteren.'
+        'ck-txt':'Wij gebruiken cookies om uw ervaring te verbeteren.','ck-link':'GDPR-beleid.'
     }
 };
 
@@ -839,22 +798,6 @@ const counterObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 document.querySelectorAll('.count').forEach(el => counterObs.observe(el));
 
-// Form submit
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (lang==='fr' ? 'Envoi...' : 'Verzenden...');
-    setTimeout(() => {
-        alert(lang === 'fr'
-            ? '✅ Demande envoyée ! Yolande NYA vous contactera sous 24h.'
-            : '✅ Aanvraag verzonden! Yolande NYA neemt binnen 24u contact op.');
-        this.reset();
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> <span id="f-send">' + T[lang]['f-send'] + '</span>';
-    }, 1200);
-});
-
 // Cookie
 function ckAccept() { document.getElementById('cookie').style.display='none'; localStorage.setItem('mc_ck','1'); }
 function ckReject()  { document.getElementById('cookie').style.display='none'; localStorage.setItem('mc_ck','0'); }
@@ -867,5 +810,9 @@ window.onload = () => {
     }
 };
 </script>
+
+<!-- Widgets Klientys : un seul chatbot, et le loader une seule fois, en HTTPS -->
+<div data-saas-widget="chatbot" data-saas-slug="muntu-cura"></div>
+<script src="https://klientys.co/embed.js" async></script>
 </body>
 </html>
